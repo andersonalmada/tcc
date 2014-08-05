@@ -58,34 +58,6 @@ int similarfloat(float a, float b, float p);
 float similaridade(Vetor a, Vetor b);
 void imprime(Vetor a);
 
-int getCountCharFile(FILE *fd) {
-	int i = 0;
-
-    while(fgetc(fd) != EOF)
-        i++;
-    rewind(fd);
-
-	return i;
-}
-
-void setText(char *str, FILE *fd) {
-	int i = 0;
-    char ch;
-
-    while((ch = fgetc(fd)) != EOF) {
-        *(str + i) = (char) ch;
-        i++;
-    }
-    *(str + i) = '\0';
-}
-
-// Calculates log2 of number.
-double log2( double n )
-{
-    // log(n)/log(2) is log2.
-    return log(n)/log(2.0);
-}
-
 int main(int argc, char** argv) {
     FILE *p, *q; /* File descriptor dos arquivos */
     Vetor vp, vq; /* Vetores com as informacoes */
@@ -115,8 +87,49 @@ int main(int argc, char** argv) {
     setText(textop, p);
     setText(textoq, q);
 
-    printf("\n%d", contaString(textop, declaracoes[4]));
+    printf("\n%d", opdist(textop, operadores));
+    printf("\n%d", optotal(textop, operadores));
+    printf("\n%d", declaradist(textop, declaracoes));
     printf("\n%d", declaratotal(textop, declaracoes));
+    printf("\n%d", reservatotal(textop, reservadas));
+    printf("\n%d", vocabulario(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", tamanho(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", volume(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", dificuldade(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", contafluloop(textop,flux,lacos));
+
+    printf("\n\n%d", opdist(textop, operadores));
+    printf("\n%d", optotal(textop, operadores));
+    printf("\n%d", declaradist(textop, declaracoes));
+    printf("\n%d", declaratotal(textop, declaracoes));
+    printf("\n%d", reservatotal(textop, reservadas));
+    printf("\n%d", vocabulario(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", tamanho(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", volume(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", dificuldade(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", contafluloop(textop,flux,lacos));
+
+    printf("\n\n%d", opdist(textop, operadores));
+    printf("\n%d", optotal(textop, operadores));
+    printf("\n%d", declaradist(textop, declaracoes));
+    printf("\n%d", declaratotal(textop, declaracoes));
+    printf("\n%d", reservatotal(textop, reservadas));
+    printf("\n%d", vocabulario(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", tamanho(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", volume(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", dificuldade(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", contafluloop(textop,flux,lacos));
+
+    printf("\n\n%d", opdist(textop, operadores));
+    printf("\n%d", optotal(textop, operadores));
+    printf("\n%d", declaradist(textop, declaracoes));
+    printf("\n%d", declaratotal(textop, declaracoes));
+    printf("\n%d", reservatotal(textop, reservadas));
+    printf("\n%d", vocabulario(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", tamanho(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", volume(textop, operadores, declaracoes, reservadas));
+    printf("\n%.2f", dificuldade(textop, operadores, declaracoes, reservadas));
+    printf("\n%d", contafluloop(textop,flux,lacos));
 
     // Inicialização dos dois vetores de similaridade
 	vp.operadoresDistintos = opdist(textop, operadores);
@@ -135,11 +148,11 @@ int main(int argc, char** argv) {
     vq.decdist = declaradist(textoq, declaracoes);
     vq.dectotal = declaratotal(textoq,declaracoes);
     vq.restotal = reservatotal(textoq, reservadas);
-    vq.fluloop = contafluloop(textoq,flux,lacos);
     vq.vocab = vocabulario(textoq, operadores, declaracoes, reservadas);
     vq.tam = tamanho(textoq, operadores, declaracoes, reservadas);
     vq.vol = volume(textoq, operadores, declaracoes, reservadas);
     vq.dific = dificuldade(textoq, operadores, declaracoes, reservadas);
+    vq.fluloop = contafluloop(textoq,flux,lacos);
 
     //Impressão dos resultados
     printf("\n**************** Resultados **************** \n");
@@ -149,6 +162,34 @@ int main(int argc, char** argv) {
     imprime(vq);
     printf("\nSimilaridade: %.2f\n",similaridade(vp, vq));
     printf("\n******************************************** \n");
+}
+
+int getCountCharFile(FILE *fd) {
+	int i = 0;
+
+    while(fgetc(fd) != EOF)
+        i++;
+    rewind(fd);
+
+	return i;
+}
+
+void setText(char *str, FILE *fd) {
+	int i = 0;
+    char ch;
+
+    while((ch = fgetc(fd)) != EOF) {
+        *(str + i) = (char) ch;
+        i++;
+    }
+    *(str + i) = '\0';
+}
+
+// Calculates log2 of number.
+double log2( double n )
+{
+    // log(n)/log(2) is log2.
+    return log(n)/log(2.0);
 }
 
 int contaString(char *a, char *b) {
@@ -265,7 +306,7 @@ int reservatotal(char *s, char **rer) {
     int i, sum = 0;
 
     for(i = 0; i < NRER; i++)
-        sum = sum + contaString(s,*(rer+i));
+        sum += contaString(s,*(rer+i));
 
     return sum;
 }
@@ -359,9 +400,9 @@ void imprime(Vetor a) {
      printf("\nDeclaracoes distintas: %d", a.decdist);
      printf("\nDeclaracoes totais: %d", a.dectotal);
      printf("\nReservadas totais: %d", a.restotal);
-     printf("\nFluxo de loops: %d", a.fluloop);
      printf("\nVocabulario: %d", a.vocab);
      printf("\nTamanho: %d", a.tam);
+     printf("\nVolume: %.2f", a.vol);
      printf("\nDificuldade: %.2f", a.dific);
-     printf("\nVolume: %.2f\n", a.vol);
+     printf("\nFluxo de loops: %d\n", a.fluloop);
 }
