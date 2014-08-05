@@ -38,6 +38,9 @@ struct vetor
 typedef struct vetor Vetor;
 
 // Protótipos das funções utilizadas.
+void clearText(char *a);
+void clearBlankLine(char *a);
+void clearComment(char *a);
 int getCountCharFile(FILE *fd);
 void setText(char *str, FILE *fd);
 int contaString(char *a, char *b);
@@ -87,8 +90,15 @@ int main(int argc, char** argv) {
     setText(textop, p);
     setText(textoq, q);
 
-    printf("\n---- 4 ---- \n");
-    printf("\n%d", opdist(textop, operadores));
+    clearText(textop);
+    //clearText(textoq);
+    printf("\n%s", textop);
+    printf("\n%s", textoq);
+
+    printf("\nlines - %d", countLines(textop));
+    printf("\nlines -%d", countLines(textoq));
+/*
+    printf("\n\n%d", opdist(textop, operadores));
     printf("\n%d", optotal(textop, operadores));
     printf("\n%d", declaradist(textop, declaracoes));
     printf("\n%d", declaratotal(textop, declaracoes));
@@ -130,7 +140,7 @@ int main(int argc, char** argv) {
     imprime(vq);
     printf("\nSimilaridade: %.2f\n",similaridade(vp, vq));
     printf("\n******************************************** \n");
-
+*/
     return 0;
 }
 
@@ -156,14 +166,27 @@ void setText(char *str, FILE *fd) {
 }
 
 // Calculates log2 of number.
-double log2( double n )
-{
-    // log(n)/log(2) is log2.
+double log2( double n ) {
     return log(n)/log(2.0);
 }
 
+int countLines(char *a) {
+    int i, n = 1;
+
+    for(i = 0; i < strlen(a); i++) {
+        if(a[i] == '\n')
+            n++;
+    }
+
+    return n;
+}
+
 void clearText(char *a) {
-    int i, j;
+    clearComment(a);
+    clearBlankLine(a);
+}
+void clearBlankLine(char *a) {
+    int i, j, k = 0, ai, af, flag = 0;
     char *aux;
 
     if((aux = (char *) calloc(strlen(a),sizeof(char))) == NULL) {
@@ -172,12 +195,65 @@ void clearText(char *a) {
     }
 
     for(i = 0; i < strlen(a); i++) {
-        if((i + 1) != strlen(a) && a[i] == '/' && a[i + 1] == '/') {
-            while(a[i] != '\n') {
-                i++;
+        if(i == 0)
+            ai = 0;
+        else if((i + 1) != strlen(a) && a[i] == '\n') {
+            af = i;
+
+            for(j = ai; j < af; j++) {
+                if(a[j] > 32) {
+                    flag = 1;
+                    break;
+                }
             }
+            if(flag) {
+                for(j = ai; j < af; j++, k++)
+                    aux[k] = a[j];
+                flag = 0;
+            }
+            ai = af;
         }
     }
+    for(j = ai; j < strlen(a); j++) {
+        if(a[j] > 32) {
+            flag = 1;
+            break;
+        }
+    }
+    if(flag) {
+        for(j = ai; j < strlen(a); j++, k++)
+            aux[k] = a[j];
+    }
+    aux[k] = '\0';
+    strcpy(a, aux);
+}
+
+void clearComment(char *a) {
+    int i, j, k;
+    char *aux;
+
+    if((aux = (char *) calloc(strlen(a),sizeof(char))) == NULL) {
+        printf("Erro na alocacao dinamica !!\n");
+        exit(1);
+    }
+
+    for(i = 0, k = 0; i < strlen(a); i++, k++) {
+        if((i + 1) != strlen(a) && a[i] == '/' && a[i + 1] == '*') {
+            i += 2;
+            while((i + 1) != strlen(a) && (a[i] != '*' || a[i + 1] != '/'))
+                i++;
+            i += 2;
+        }
+        else if((i + 1) != strlen(a) && a[i] == '/' && a[i + 1] == '/') {
+            i += 2;
+            while((i + 1) != strlen(a) && a[i] != '\n')
+                i++;
+            i++;
+        }
+        aux[k] = a[i];
+    }
+    aux[k] = '\0';
+    strcpy(a, aux);
 }
 
 /* Conta String */
@@ -239,19 +315,8 @@ int opdist(char *s, char **op) {
 int optotal(char *s, char **op) {
     int i,c, sum = 0;
 
-    for(i = 0; i < NOP; i++) {
-
-        if(i == 6 || i == 19 || i ==20 || i==22 || i == 23 || i ==26 || (((i>32)&&(i!=38))&&(i!=39)))
-            c = -2;
-        else if(i == 7 || i == 8 || i == 25 || i == 29 || i == 30)
-            c = -1;
-        else if (i == 38 || i == 39)
-            c = 2;
-        else
-            c = 1;
-
-        sum = sum+c*contaString(s,*(op+i));
-    }
+    for(i = 0; i < NOP; i++)
+        sum += contaString(s,*(op+i));
 
     return sum;
 }
