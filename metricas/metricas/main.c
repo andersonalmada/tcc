@@ -3,26 +3,22 @@
 #include <stdio.h>
 #include <math.h>
 
-/*Constantes da linguagem C indicando o número de alguns tipos de componente*/
-
-#define NOP 41
+/* Constantes da linguagem C indicando o número de alguns tipos de componente */
+#define NOP 40
 #define NDEC 10
-#define NRER 16
+#define NRER 13
 #define NLOOP 2
-#define NFLUX 4
+#define NFLUX 6
 
-/*Vetores com os diferentes tipos de componente*/
-
-char *operadores[] = {"(","[",".",",","->","++","--","~","!","*","&","+","-","<<",">>","<",">","<=",">=","/","/*","*/","%","==","!=","^","|","||","&&","?","=","*=","/=","%=","+=","-=",">>=", "<<=", "&=", "^=", "!="};
+/* Vetores com os diferentes tipos de componente */
+char *operadores[] = {"sizeof","(","[",".",",","->","++","--","~","!","*","&","+","-","<<",">>","<",">","<=",">=","/","%","==","!=","^","|","||","&&","?","=","*=","/=","%=","+=","-=",">>=","<<=","&=","^=","|="};
 char *declaracoes[] = {"char","const","double","float","int","long","signed","unsigned","void", "short"};
 char *lacos[] = {"while","for"};
-char *flux[] = {"if","else","switch","case"};
-char *reservadas[] = {"auto","break","continue","default","do","enum","extern","goto","register","return","sizeof","static","struct","typedef","union","volatile"};
+char *flux[] = {"if","else","switch","case","break","continue"};
+char *reservadas[] = {"auto","default","do","enum","extern","goto","register","return","static","struct","typedef","union","volatile"};
 
-/*Estrutura contendo as 10 métricas utilizadas*/
-
-struct vetor
-{
+/* Estrutura contendo as 10 métricas utilizadas */
+struct vetor {
     int operadoresDistintos;
     int totalOperadores;
     int decdist;
@@ -34,10 +30,9 @@ struct vetor
     float dific;
     float vol;
 };
-
 typedef struct vetor Vetor;
 
-// Protótipos das funções utilizadas.
+/* Protótipos das funções utilizadas */
 void clearText(char *a);
 void clearBlankLine(char *a);
 void clearComment(char *a);
@@ -91,23 +86,9 @@ int main(int argc, char** argv) {
     setText(textoq, q);
 
     clearText(textop);
-    //clearText(textoq);
+    clearText(textoq);
     printf("\n%s", textop);
     printf("\n%s", textoq);
-
-    printf("\nlines - %d", countLines(textop));
-    printf("\nlines -%d", countLines(textoq));
-/*
-    printf("\n\n%d", opdist(textop, operadores));
-    printf("\n%d", optotal(textop, operadores));
-    printf("\n%d", declaradist(textop, declaracoes));
-    printf("\n%d", declaratotal(textop, declaracoes));
-    printf("\n%d", reservatotal(textop, reservadas));
-    printf("\n%d", vocabulario(textop, operadores, declaracoes, reservadas));
-    printf("\n%d", tamanho(textop, operadores, declaracoes, reservadas));
-    printf("\n%.2f", volume(textop, operadores, declaracoes, reservadas));
-    printf("\n%.2f", dificuldade(textop, operadores, declaracoes, reservadas));
-    printf("\n%d", contafluloop(textop,flux,lacos));
 
     // Inicialização dos dois vetores de similaridade
 	vp.operadoresDistintos = opdist(textop, operadores);
@@ -140,7 +121,7 @@ int main(int argc, char** argv) {
     imprime(vq);
     printf("\nSimilaridade: %.2f\n",similaridade(vp, vq));
     printf("\n******************************************** \n");
-*/
+
     return 0;
 }
 
