@@ -30,9 +30,19 @@ struct vetor {
     float dific;
     float vol;
 };
+struct content {
+    int length;
+    char **stringVector;
+};
+
 typedef struct vetor Vetor;
+typedef struct content Content;
 
 /* Protótipos das funções utilizadas */
+FILE* readFile(char *str);
+Content explode(char *str, char *ch);
+int countLinesFile(FILE *fd);
+void readLine(FILE *fd, char *s);
 void clearText(char *a);
 void clearBlankLine(char *a);
 void clearComment(char *a);
@@ -57,21 +67,22 @@ float similaridade(Vetor a, Vetor b);
 void imprime(Vetor a);
 
 int main(int argc, char** argv) {
-    FILE *p, *q; /* File descriptor dos arquivos */
+    FILE *p, *q, *dados; /* File descriptor dos arquivos */
     Vetor vp, vq; /* Vetores com as informacoes */
     char *textop, *textoq; /* Strings contendo o conteudo dos arquivos */
+    char str[200];
+    int i = 0;
+    Content *content;
 
-    /* Abrindo os arquivos */
-    if((p = fopen(argv[1],"r")) == NULL) {
-       	printf("Erro na abertura do arquivo: %s.\n", argv[1]);
-		exit(1);
-    }
-    if((q = fopen(argv[2],"r")) == NULL) {
-       	printf("Erro na abertura do arquivo: %s.\n", argv[2]);
-		exit(1);
-    }
+    /* Abertura de arquivos */
+    if(!(dados = readFile(argv[1])))
+        exit(EXIT_FAILURE);
+    if(!(p = readFile(argv[2])))
+        exit(EXIT_FAILURE);
+    if(!(q = readFile(argv[3])))
+        exit(EXIT_FAILURE);
 
-    /* Alocacao Dinamica da memoria para os arquivos */
+    /* Alocacao dinamica da memoria para os arquivos */
     if((textop = (char *) calloc(getCountCharFile(p),sizeof(char))) == NULL) {
         printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[1]);
         exit(1);
@@ -81,10 +92,24 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    /* Seta as strings com os textos dos arquivos*/
-    setText(textop, p);
-    setText(textoq, q);
+    if(countLinesFile(dados) > 0) { // Tem linhas no arquivo
+        if((content = (Content *) calloc(countLinesFile(dados),sizeof(Content))) == NULL) {
+            printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[2]);
+            exit(1);
+        }
+        rewind(dados);
 
+        while(!feof(dados)) {
+            readLine(dados, str);
+            printf(str);
+            explode(str," ");
+            i++;
+        };
+
+        /* Seta as strings com os textos dos arquivos*/
+        setText(textop, p);
+        setText(textoq, q);
+/*
     clearText(textop);
     clearText(textoq);
     printf("\n%s", textop);
@@ -121,8 +146,72 @@ int main(int argc, char** argv) {
     imprime(vq);
     printf("\nSimilaridade: %.2f\n",similaridade(vp, vq));
     printf("\n******************************************** \n");
-
+*/
+    }
     return 0;
+}
+
+FILE* readFile(char *str) {
+    FILE *aux = NULL;
+
+    if((aux = fopen(str,"r")) == NULL) {
+       	printf("Erro na abertura do arquivo: %s.\n", str);
+    }
+
+    return aux;
+}
+
+Content explode(char *str, char *ch) {
+    int i, j = 0, n = 0;
+    char **aux, *p;
+    Content content;
+
+    for(i = 0; str[i] != '\0'; i++) {
+        if(str[i] == ch[0])
+            n++;
+    }
+    n++;
+    printf("\n\n");
+
+    if((aux = (char **) calloc(n,sizeof(char*))) == NULL) {
+        printf("Erro na alocacao dinamica !!\n");
+        exit(1);
+    }
+
+    p = strtok(str,ch);
+    while(j < n) {
+        aux[j] = p;
+        printf ("%s\n", aux[j]);
+        p = strtok (NULL,ch);
+        j++;
+    }
+
+    content.length = n;
+    content.stringVector = aux;
+    return content;
+}
+
+int countLinesFile(FILE *fd) {
+    int i, n = 1;
+    char ch;
+
+    while((ch = fgetc(fd)) != EOF) {
+        if((char)ch == '\n')
+            n++;
+    }
+
+    return n;
+}
+
+void readLine(FILE *fd, char *str) {
+    int i = 0;
+    char ch;
+
+    while((ch = fgetc(fd)) != EOF && ((char)ch != '\n')) {
+        *(str + i) = (char)ch;
+        i++;
+    }
+    *(str + i) = '\0';
 }
 
 int getCountCharFile(FILE *fd) {
@@ -258,28 +347,7 @@ int contaString(char *a, char *b) {
     }
     return n;
 }
-/*
-//Conta quantas vezes a string b aparece na string a.
-int contaString(char *a, char *b) {
-    int i, j, k = 0, size_a = strlen(a), size_b = strlen(b), equal = 0, cont = 0;
 
-    for(i = 0; i < size_b; i++) {
-        for(j = 0; j < size_a; j++) {
-            k = 0;
-            equal = 0;
-
-            for(k = 0; k < size_b; k++) {
-                if(a[j+k] == b[i+k])
-                    equal++;
-                if(equal == size_b)
-                    cont++;
-            }
-        }
-    }
-
-    return cont;
-}
-*/
 /* Contador de operadores distintos */
 int opdist(char *s, char **op) {
     int i, sum = 0;
@@ -363,7 +431,7 @@ int contafluxo(char *s, char **f) {
     for(i = 0; i < NFLUX; i++)
         sum += contaString(s,*(f+i));
 
-    return sum - 1;
+    return sum;
 }
 
 /* Estimador do número total de estruturas semânticas */
