@@ -33,6 +33,7 @@ struct vetor {
 struct content {
     int length;
     char **stringVector;
+    char *id;
 };
 
 typedef struct vetor Vetor;
@@ -40,7 +41,8 @@ typedef struct content Content;
 
 /* Protótipos das funções utilizadas */
 FILE* readFile(char *str);
-void setContent(char *str, Content cont, char *ch);
+Content getContent(Content *cont, char *id);
+void setContent(char *str, Content *cont, char *ch);
 int countLinesFile(FILE *fd);
 void readLine(FILE *fd, char *s);
 void clearText(char *a);
@@ -70,9 +72,9 @@ int main(int argc, char** argv) {
     FILE *p, *q, *dados; /* File descriptor dos arquivos */
     Vetor vp, vq; /* Vetores com as informacoes */
     char *textop, *textoq; /* Strings contendo o conteudo dos arquivos */
-    char str[200];
+    char str[300];
     int i = 0;
-    Content *content;
+    Content *content, aux;
 
     /* Abertura de arquivos */
     if(!(dados = readFile(argv[1])))
@@ -97,14 +99,19 @@ int main(int argc, char** argv) {
             printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[2]);
             exit(1);
         }
-        rewind(dados);
 
         while(!feof(dados)) {
             readLine(dados, str);
-            printf(str);
-            setContent(str, *(content + i), " ");
+            setContent(str, content+i, " ");
             i++;
         };
+
+        aux = getContent(content, "flow");
+
+        printf("\n%d", aux.length);
+        printf("\n%s", aux.id);
+        for(i = 0; i < aux.length; i++)
+            printf("\n%s", aux.stringVector[i]);
 
         /* Seta as strings com os textos dos arquivos*/
         setText(textop, p);
@@ -161,7 +168,16 @@ FILE* readFile(char *str) {
     return aux;
 }
 
-void setContent(char *str, Content cont, char *ch) {
+Content getContent(Content *cont, char *id) {
+    int i = 0;
+
+    while(strcmp(cont[i].id, id) != 0)
+        i++;
+
+    return *(cont+i);
+}
+
+void setContent(char *str, Content *cont, char *ch) {
     int i, j = 0, n = 0;
     char **aux, *p;
 
@@ -169,19 +185,27 @@ void setContent(char *str, Content cont, char *ch) {
         if(str[i] == ch[0])
             n++;
     }
-    n++;
-    cont.length = n;
+    cont->length = n;
 
-    if((cont.stringVector = (char **) calloc(n,sizeof(char*))) == NULL) {
+    if((cont->stringVector = (char **) calloc(n,sizeof(char*))) == NULL) {
         printf("Erro na alocacao dinamica !!\n");
         exit(1);
     }
 
-    p = strtok(str,ch);
+    p = strtok(str,"#");
+    if((cont->id = (char *) calloc(strlen(p)+1,sizeof(char))) == NULL) {
+        printf("Erro na alocacao dinamica !!\n");
+        exit(1);
+    }
+    strcpy(cont->id,p);
+    p = strtok(NULL,ch);
     while(j < n) {
-        cont.stringVector[j] = p;
-        printf ("\n%s", cont.stringVector[j]);
-        p = strtok (NULL,ch);
+        if((cont->stringVector[j] = (char *) calloc(strlen(p)+1,sizeof(char))) == NULL) {
+            printf("Erro na alocacao dinamica !!\n");
+            exit(1);
+        }
+        strcpy(cont->stringVector[j],p);
+        p = strtok(NULL,ch);
         j++;
     }
 }
@@ -194,6 +218,7 @@ int countLinesFile(FILE *fd) {
         if((char)ch == '\n')
             n++;
     }
+    rewind(fd);
 
     return n;
 }

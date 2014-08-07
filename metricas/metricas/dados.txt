@@ -1,5 +1,5 @@
-sizeof ( [ . , -> ++ -- ~ ! * & + - << >> < > <= >= / % == != ^ | || && ? = *= /= %= += -= >>= <<= &= ^= |=
-char const double float int long signed unsigned void short
-while for
-if else switch case break continue
-auto default do enum extern goto register return static struct typedef union volatile
+op# sizeof ( [ . , -> ++ -- ~ ! * & + - << >> < > <= >= / % == != ^ | || && ? = *= /= %= += -= >>= <<= &= ^= |=
+dec# char const double float int long signed unsigned void short
+loop# while for
+flow# if else switch case break continue
+res# auto default do enum extern goto register return static struct typedef union volatile
