@@ -40,7 +40,7 @@ typedef struct content Content;
 
 /* Protótipos das funções utilizadas */
 FILE* readFile(char *str);
-Content explode(char *str, char *ch);
+void setContent(char *str, Content cont, char *ch);
 int countLinesFile(FILE *fd);
 void readLine(FILE *fd, char *s);
 void clearText(char *a);
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
         while(!feof(dados)) {
             readLine(dados, str);
             printf(str);
-            explode(str," ");
+            setContent(str, *(content + i), " ");
             i++;
         };
 
@@ -161,34 +161,29 @@ FILE* readFile(char *str) {
     return aux;
 }
 
-Content explode(char *str, char *ch) {
+void setContent(char *str, Content cont, char *ch) {
     int i, j = 0, n = 0;
     char **aux, *p;
-    Content content;
 
     for(i = 0; str[i] != '\0'; i++) {
         if(str[i] == ch[0])
             n++;
     }
     n++;
-    printf("\n\n");
+    cont.length = n;
 
-    if((aux = (char **) calloc(n,sizeof(char*))) == NULL) {
+    if((cont.stringVector = (char **) calloc(n,sizeof(char*))) == NULL) {
         printf("Erro na alocacao dinamica !!\n");
         exit(1);
     }
 
     p = strtok(str,ch);
     while(j < n) {
-        aux[j] = p;
-        printf ("%s\n", aux[j]);
+        cont.stringVector[j] = p;
+        printf ("\n%s", cont.stringVector[j]);
         p = strtok (NULL,ch);
         j++;
     }
-
-    content.length = n;
-    content.stringVector = aux;
-    return content;
 }
 
 int countLinesFile(FILE *fd) {
