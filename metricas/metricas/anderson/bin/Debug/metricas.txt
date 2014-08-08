@@ -1,0 +1,12 @@
+opDiff# 1 0.25
+opTotal# 0 0.15
+decDiff# 0 0.25
+decTotal# 1 0.15
+resDiff# 1 0.25
+resTotal# 1 0.15
+flowLoop# 0 0.15
+vocabHalstead# 1 0.15
+lengthHalstead# 1 0.15
+diffHalstead# 1 0.15
+volumeHalstead# 0 0.15
+##

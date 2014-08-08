@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1407532673 source:c:\users\franciscoanderson\documents\github\tcc\metricas\metricas\anderson\main.c
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	"metricas.h"
+
+1407531689 c:\users\franciscoanderson\documents\github\tcc\metricas\metricas\anderson\metricas.h
+
+1407532334 source:c:\users\franciscoanderson\documents\github\tcc\metricas\metricas\anderson\metricas.c
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+	"metricas.h"
+

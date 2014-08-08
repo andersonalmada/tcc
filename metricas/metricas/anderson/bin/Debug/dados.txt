@@ -4,15 +4,3 @@ loop# while for
 flow# if else switch case break continue
 res# auto default do enum extern goto register return static struct typedef union volatile
 ##
-opDiff# 1 0.25
-opTotal# 1 0.15
-decDiff# 1 0.25
-decTotal# 1 0.15
-resDiff# 1 0.25
-resTotal# 1 0.15
-flowLoop# 1 0.15
-vocabHalstead# 1 0.15
-lengthHalstead# 1 0.15
-diffHalstead# 1 0.15
-volumeHalstead# 1 0.15
-##
