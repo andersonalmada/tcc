@@ -3,17 +3,30 @@
 
 /* Estrutura contendo as métricas utilizadas */
 struct vectorMetrics {
-    float opDiff;
-    float opTotal;
-    float decDiff;
-    float decTotal;
-    float resDiff;
-    float resTotal;
-    float flowLoop;
-    float vocabHalstead;
-    float lengthHalstead;
-    float diffHalstead;
-    float volumeHalstead;
+    double opDiff;
+    double opTotal;
+    double decDiff;
+    double decTotal;
+    double resDiff;
+    double resTotal;
+    double flowLoop;
+    double numberLines;
+    double numberCallFunctions;
+    double numberBlocks;
+    double vocabHalstead;
+    double lengthHalstead;
+    double estimatedLengthHalstead;
+    double diffHalstead;
+    double volumeHalstead;
+    double potencialVolumeHalstead;
+    double programLevelHalstead;
+    double estimatedProgramLevelHalstead;
+    double programDifficultyHalstead;
+    double intelligenceContentHalstead;
+    double programmingEffortHalstead;
+    double estimatedProgrammingTimeHalstead;
+    double languageLevelHalstead;
+    double numberBugsHalstead;
 };
 typedef struct vectorMetrics VectorMetrics;
 
@@ -33,31 +46,34 @@ typedef struct enableMetrics EnableMetrics;
 
 /* Protótipos das funções utilizadas */
 FILE* readFile(char *str);
-Content getContent(Content *cont, char *id);
-void setVectorMetrics(char *str, Content *content, EnableMetrics *enable, int n, VectorMetrics *vectorMetrics);
+void setVectorMetrics(FILE *fd, char *str, Content *content, EnableMetrics *enable, int n, VectorMetrics *vectorMetrics);
 void setEnableMetrics(char *str, EnableMetrics *enable);
 void showVectorMetrics(VectorMetrics vectorMetrics);
+Content *getContent(Content *cont, char *id);
 void setContent(char *str, Content *cont);
-int countLines(FILE *fd);
+int countLinesFile(FILE *fd);
+int countLinesText(char *str);
+int getNumberCallFunctions(char *str, Content *content);
+int getNumberBlocks(char *str);
 void readLine(FILE *fd, char *s);
 void clearText(char *a);
 void clearBlankLine(char *a);
 void clearComment(char *a);
 int getCountCharFile(FILE *fd);
 void setText(char *str, FILE *fd);
-int countString(char *a, char *b);
-int countDiffContent(char *s, Content cont);
-int countTotalContent(char *s, Content cont);
-float similarity(VectorMetrics a, VectorMetrics b, EnableMetrics *enable, int n);
-int similarityFloat(float a, float b, float p);
-/*
-int contafluloop(char *s, char**f,char**l);
-int vocabulario(char *s, char **op, char **dec, char **rer);
-int tamanho(char *s, char **op, char **dec, char **rer);
-float volume(char *s, char **op, char **dec, char **rer);
-float dificuldade(char *s, char **op, char **dec, char **rer);
-int similarfloat(float a, float b, float p);
-float similaridade(Vetor a, Vetor b);
-void imprime(Vetor a);
-*/
+double countString(char *a, char *b);
+double countDiffContent(char *s, Content *cont);
+double countTotalContent(char *s, Content *cont);
+double similarity(VectorMetrics a, VectorMetrics b, EnableMetrics *enable, int n);
+int similarityFloat(double a, double b, double p);
+double n1(char* str, Content *content);
+double n2(char* str, Content *content);
+double N1(char* str, Content *content);
+double N2(char* str, Content *content);
+double volumeHalstead(char* str, Content* content);
+double potencialVolumeHalstead(char* str, Content* content);
+double programLevelHalstead(char* str, Content* content);
+double estimatedProgramLevelHalstead(char* str, Content* content);
+double programmingEffortHalstead(char* str, Content* content);
+
 #endif // METRICAS_H_INCLUDED

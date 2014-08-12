@@ -1,3 +1,0 @@
-** vocabulario de halstead = a soma de operadores distintos mais a soma de operandos distintos
-	operadores = tradicional + palavras chaves (reservadas, flow, loop)
-	operandos = identificadores

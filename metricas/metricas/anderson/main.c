@@ -25,15 +25,15 @@ int main(int argc, char** argv) {
 
     /* Alocacao dinamica da memoria para os arquivos */
     if((textFd1 = (char *) calloc(getCountCharFile(fd1),sizeof(char))) == NULL) {
-        printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[1]);
+        printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[3]);
         exit(1);
     }
     if((textFd2 = (char *) calloc(getCountCharFile(fd2),sizeof(char))) == NULL) {
-        printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[2]);
+        printf("Erro na alocacao dinamica. Arquivo: %s\n", argv[4]);
         exit(1);
     }
 
-    n = countLines(dados); /* Conta as linhas do arquivo que contem o conteudo da linguagem */
+    n = countLinesFile(dados); /* Conta as linhas do arquivo que contem o conteudo da linguagem */
 
     if(n > 0) { // Tem conteudo
         if((content = (Content *) calloc(n,sizeof(Content))) == NULL) {
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
             i++;
         };
         i = 0; n = 0;
-        n = countLines(metricas); /* Conta as linhas do arquivo que contem as metricas */
+        n = countLinesFile(metricas); /* Conta as linhas do arquivo que contem as metricas */
 
         if(n > 0) { // Tem metricas
             if((enableMetrics = (EnableMetrics *) calloc(n,sizeof(EnableMetrics))) == NULL) {
@@ -59,24 +59,17 @@ int main(int argc, char** argv) {
                 i++;
             };
 
-            /* Seta as strings com os textos dos arquivos */
-            setText(textFd1, fd1);
-            setText(textFd2, fd2);
-
-            /* Limpa os textos */
-            clearText(textFd1);
-            clearText(textFd2);
-
-            setVectorMetrics(textFd1, content, enableMetrics, n, &vectorMetrics[0]);
-            setVectorMetrics(textFd2, content, enableMetrics, n, &vectorMetrics[1]);
+            /* Seta os parametros do vetor */
+            setVectorMetrics(fd1, textFd1, content, enableMetrics, n, &vectorMetrics[0]);
+            setVectorMetrics(fd2, textFd2, content, enableMetrics, n, &vectorMetrics[1]);
 
             /* Imprime os vetores e o resultado */
             printf("\n**************** Results **************** \n");
             printf("\nVectorMetrics[1]:\n");
             showVectorMetrics(vectorMetrics[0]);
-            printf("\nVectorMetrics[2]:\n");
+            printf("\n\nVectorMetrics[2]:\n");
             showVectorMetrics(vectorMetrics[1]);
-            printf("\nSimilarity: %.2f\n", similarity(vectorMetrics[0], vectorMetrics[1], enableMetrics, n));
+            printf("\n\nSimilarity: %.2f\n", similarity(vectorMetrics[0], vectorMetrics[1], enableMetrics, n));
             printf("\n******************************************** \n");
         }
         else
@@ -84,5 +77,6 @@ int main(int argc, char** argv) {
     }
     else
         printf("\nSem conteudo !!\n\n");
+
     return 0;
 }

@@ -5,9 +5,6 @@ decTotal# 1 0.15
 resDiff# 1 0.25
 resTotal# 1 0.15
 flowLoop# 1 0.15
-numberLines# 1 0.15
-numberCallFunctions# 1 0.15
-numberBlocks# 1 0.15
 vocabHalstead# 1 0.15
 lengthHalstead# 1 0.15
 estimatedLengthHalstead# 1 0.15
@@ -19,7 +16,4 @@ estimatedProgramLevelHalstead# 1 0.15
 programDifficultyHalstead# 1 0.15
 intelligenceContentHalstead# 1 0.15
 programmingEffortHalstead# 1 0.15
-estimatedProgrammingTimeHalstead# 1 0.15
-languageLevelHalstead# 1 0.15
-numberBugsHalstead# 1 0.15
 ##
