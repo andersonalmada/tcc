@@ -1,25 +1,19 @@
-opDiff# 1 0.25 1
-opTotal# 1 0.15 2
-decDiff# 1 0.25 1
-decTotal# 1 0.15 2
-resDiff# 1 0.25 1
-resTotal# 1 0.15 2
-flowLoop# 1 0.15 3
-numberLines# 1 0.15 1
-numberCallFunctions# 1 0.15 1
-numberBlocks# 1 0.15 1
-vocabHalstead# 1 0.15 2
-lengthHalstead# 1 0.15 2
-estimatedLengthHalstead# 1 0.15 1
-diffHalstead# 1 0.15 2
-volumeHalstead# 1 0.15 2
-potencialVolumeHalstead# 1 0.15 1
-programLevelHalstead# 1 0.15 1
-estimatedProgramLevelHalstead# 1 0.15 1
-programDifficultyHalstead# 1 0.15 1
-intelligenceContentHalstead# 1 0.15 1
-programmingEffortHalstead# 1 0.15 1
-estimatedProgrammingTimeHalstead# 1 0.15 1
-languageLevelHalstead# 1 0.15 1
-numberBugsHalstead# 1 0.15 1
+opDiff# 1 0.25
+opTotal# 1 0.15
+decDiff# 1 0.25
+decTotal# 1 0.15
+resDiff# 1 0.25
+resTotal# 1 0.15
+flowLoop# 1 0.15
+vocabHalstead# 1 0.15
+lengthHalstead# 1 0.15
+estimatedLengthHalstead# 1 0.15
+diffHalstead# 1 0.15
+volumeHalstead# 1 0.15
+potencialVolumeHalstead# 1 0.15
+programLevelHalstead# 1 0.15
+estimatedProgramLevelHalstead# 1 0.15
+programDifficultyHalstead# 1 0.15
+intelligenceContentHalstead# 1 0.15
+programmingEffortHalstead# 1 0.15
 ##

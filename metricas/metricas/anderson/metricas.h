@@ -38,10 +38,9 @@ struct content {
 typedef struct content Content;
 
 struct enableMetrics {
-    char *id;
     int enable;
     float accuracy;
-    int weight;
+    char *id;
 };
 typedef struct enableMetrics EnableMetrics;
 
