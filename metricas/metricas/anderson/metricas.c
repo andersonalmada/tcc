@@ -60,7 +60,7 @@ void setVectorMetrics(FILE *fd, char *str, Content *content, EnableMetrics *enab
     int i;
 
     setText(str, fd); /* Seta as strings com os textos dos arquivos */
-    clearText(str); /* Limpa os textos */
+    clearText(str);   /* Limpa os textos */
 
     for(i = 0; i < n; i++) {
         if(strcmp(enable[i].id,"opDiff") == 0) {
@@ -235,6 +235,7 @@ void setEnableMetrics(char *str, EnableMetrics *enable) {
     strcpy(enable->id,p); // Parametro
     enable->enable = atoi(strtok(NULL,ch)); // Habilitado
     enable->accuracy = atof(strtok(NULL,ch)); // Precisao
+    enable->weight = atoi(strtok(NULL,ch));
 }
 
 int countLinesFile(FILE *fd) {
@@ -264,7 +265,24 @@ int countLinesText(char *str) {
 }
 
 int getNumberCallFunctions(char *str, Content *content) {
-    return countString(str, "(") - (countTotalContent(str, getContent(content,"loop")) + countString(str, "if") + countString(str, "switch"));
+    int i, j, n = 0;
+
+    for(i = 0; i < strlen(str); i++ ) {
+        if(str[i] == '(') {
+            for(j = i-1; ; j--) {
+                if(str[j] == ' ' || str[j] == '\n' || (int) str[j] == 9); // espaço em branco ou pula linha ou tab
+                else if(((int) str[j] > 47 && (int) str[j] < 58) || ((int) str[j] > 64 && (int) str[j] < 91) || ((int) str[j] > 96 && (int) str[j] < 123) || (str[j] == '_')) {
+                    n++;
+                    break;
+                }
+                else
+                    break;
+            }
+        }
+    }
+    n -= countTotalContent(str, getContent(content,"loop")) + countString(str, "if") + countString(str, "switch");
+
+    return n;
 }
 
 int getNumberBlocks(char *str) {
@@ -469,7 +487,7 @@ void showVectorMetrics(VectorMetrics vectorMetrics) {
         printf("\nNumber of bugs Halstead = %.2f", vectorMetrics.numberBugsHalstead);
 }
 
-/* Avaliador de similaridade entre dois números A e B com variável de peso P */
+/* Avaliador de similaridade entre dois números A e B com variável de limiar P */
 int similarityFloat(double a, double b, double p) {
     if(a == 0 && b == 0)
         return 1;
@@ -491,60 +509,60 @@ double similarity(VectorMetrics a, VectorMetrics b, EnableMetrics *enable, int l
 
     for(i = 0; i < lines; i++) {
         if(enable[i].enable)
-            n++;
+            n += enable[i].weight*1;
     }
 
     if(n > 0) {
         for(i = 0; i < lines; i++) {
             if(enable[i].enable) {
                 if(strcmp(enable[i].id,"opDiff") == 0)
-                    sum += similarityFloat(a.opDiff, b.opDiff, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.opDiff, b.opDiff, enable[i].accuracy);
                 if(strcmp(enable[i].id,"opTotal") == 0)
-                    sum += similarityFloat(a.opTotal, b.opTotal, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.opTotal, b.opTotal, enable[i].accuracy);
                 if(strcmp(enable[i].id,"decDiff") == 0)
-                    sum += similarityFloat(a.decDiff, b.decDiff, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.decDiff, b.decDiff, enable[i].accuracy);
                 if(strcmp(enable[i].id,"decTotal") == 0)
-                    sum += similarityFloat(a.decTotal, b.decTotal, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.decTotal, b.decTotal, enable[i].accuracy);
                 if(strcmp(enable[i].id,"resDiff") == 0)
-                    sum += similarityFloat(a.resDiff, b.resDiff, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.resDiff, b.resDiff, enable[i].accuracy);
                 if(strcmp(enable[i].id,"resTotal") == 0)
-                    sum += similarityFloat(a.resTotal, b.resTotal, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.resTotal, b.resTotal, enable[i].accuracy);
                 if(strcmp(enable[i].id,"flowLoop") == 0)
-                    sum += similarityFloat(a.flowLoop, b.flowLoop, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.flowLoop, b.flowLoop, enable[i].accuracy);
                 if(strcmp(enable[i].id,"numberLines") == 0)
-                    sum += similarityFloat(a.numberLines, b.numberLines, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.numberLines, b.numberLines, enable[i].accuracy);
                 if(strcmp(enable[i].id,"numberCallFunctions") == 0)
-                    sum += similarityFloat(a.numberCallFunctions, b.numberCallFunctions, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.numberCallFunctions, b.numberCallFunctions, enable[i].accuracy);
                 if(strcmp(enable[i].id,"numberBlocks") == 0)
-                    sum += similarityFloat(a.numberBlocks, b.numberBlocks, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.numberBlocks, b.numberBlocks, enable[i].accuracy);
                 if(strcmp(enable[i].id,"vocabHalstead") == 0)
-                    sum += similarityFloat(a.vocabHalstead, b.vocabHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.vocabHalstead, b.vocabHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"lengthHalstead") == 0)
-                    sum += similarityFloat(a.lengthHalstead, b.lengthHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.lengthHalstead, b.lengthHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"estimatedLengthHalstead") == 0)
-                    sum += similarityFloat(a.estimatedLengthHalstead, b.estimatedLengthHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.estimatedLengthHalstead, b.estimatedLengthHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"diffHalstead") == 0)
-                    sum += similarityFloat(a.diffHalstead, b.diffHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.diffHalstead, b.diffHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"volumeHalstead") == 0)
-                    sum += similarityFloat(a.volumeHalstead, b.volumeHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.volumeHalstead, b.volumeHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"potencialVolumeHalstead") == 0)
-                    sum += similarityFloat(a.potencialVolumeHalstead, b.potencialVolumeHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.potencialVolumeHalstead, b.potencialVolumeHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"programLevelHalstead") == 0)
-                    sum += similarityFloat(a.programLevelHalstead, b.programLevelHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.programLevelHalstead, b.programLevelHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"estimatedProgramLevelHalstead") == 0)
-                    sum += similarityFloat(a.estimatedProgramLevelHalstead, b.estimatedProgramLevelHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.estimatedProgramLevelHalstead, b.estimatedProgramLevelHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"programDifficultyHalstead") == 0)
-                    sum += similarityFloat(a.programDifficultyHalstead, b.programDifficultyHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.programDifficultyHalstead, b.programDifficultyHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"intelligenceContentHalstead") == 0)
-                    sum += similarityFloat(a.intelligenceContentHalstead, b.intelligenceContentHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.intelligenceContentHalstead, b.intelligenceContentHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"programmingEffortHalstead") == 0)
-                    sum += similarityFloat(a.programmingEffortHalstead, b.programmingEffortHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.programmingEffortHalstead, b.programmingEffortHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"estimatedProgrammingTimeHalstead") == 0)
-                    sum += similarityFloat(a.estimatedProgrammingTimeHalstead, b.estimatedProgrammingTimeHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.estimatedProgrammingTimeHalstead, b.estimatedProgrammingTimeHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"languageLevelHalstead") == 0)
-                    sum += similarityFloat(a.languageLevelHalstead, b.languageLevelHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.languageLevelHalstead, b.languageLevelHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"numberBugsHalstead") == 0)
-                    sum += similarityFloat(a.numberBugsHalstead, b.numberBugsHalstead, enable[i].accuracy);
+                    sum += (enable[i].weight) * similarityFloat(a.numberBugsHalstead, b.numberBugsHalstead, enable[i].accuracy);
             }
         }
 
