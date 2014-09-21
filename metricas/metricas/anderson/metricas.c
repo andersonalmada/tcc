@@ -62,30 +62,46 @@ void setVectorMetrics(FILE *fd, char *str, Content *content, EnableMetrics *enab
     setText(str, fd); /* Seta as strings com os textos dos arquivos */
     clearText(str);   /* Limpa os textos */
 
+    vectorMetrics->opDiff = -1;
+    vectorMetrics->opTotal = -1;
+    vectorMetrics->decDiff = -1;
+    vectorMetrics->decTotal = -1;
+    vectorMetrics->resDiff = -1;
+    vectorMetrics->resTotal = -1;
+    vectorMetrics->flowLoop = -1;
+    vectorMetrics->numberLines = -1;
+    vectorMetrics->numberBlocks = -1;
+    vectorMetrics->numberCallFunctions = -1;
+    vectorMetrics->diffHalstead = -1;
+    vectorMetrics->estimatedLengthHalstead = -1;
+    vectorMetrics->estimatedProgrammingTimeHalstead = -1;
+    vectorMetrics->estimatedProgramLevelHalstead = -1;
+    vectorMetrics->intelligenceContentHalstead = -1;
+    vectorMetrics->languageLevelHalstead = -1;
+    vectorMetrics->lengthHalstead = -1;
+    vectorMetrics->numberBugsHalstead = -1;
+    vectorMetrics->potencialVolumeHalstead = -1;
+    vectorMetrics->programLevelHalstead = -1;
+    vectorMetrics->programmingEffortHalstead = -1;
+    vectorMetrics->vocabHalstead = -1;
+    vectorMetrics->volumeHalstead = -1;
+
     for(i = 0; i < n; i++) {
         if(strcmp(enable[i].id,"opDiff") == 0) {
             if(enable[i].enable)
                 vectorMetrics->opDiff = countDiffContent(str, getContent(content, "op"));
-            else
-                vectorMetrics->opDiff = -1;
         }
         else if(strcmp(enable[i].id,"opTotal") == 0) {
             if(enable[i].enable)
                 vectorMetrics->opTotal = countTotalContent(str, getContent(content, "op"));
-            else
-                vectorMetrics->opTotal = -1;
         }
         else if(strcmp(enable[i].id,"decDiff") == 0) {
             if(enable[i].enable)
                 vectorMetrics->decDiff = countDiffContent(str, getContent(content, "dec"));
-            else
-                vectorMetrics->decDiff = -1;
         }
         else if(strcmp(enable[i].id,"decTotal") == 0) {
             if(enable[i].enable)
                 vectorMetrics->decTotal = countTotalContent(str, getContent(content, "dec"));
-            else
-                vectorMetrics->decTotal = -1;
         }
         else if(strcmp(enable[i].id,"resDiff") == 0) {
             if(enable[i].enable) {
@@ -94,8 +110,6 @@ void setVectorMetrics(FILE *fd, char *str, Content *content, EnableMetrics *enab
                                          countDiffContent(str, getContent(content, "loop")) +
                                          countDiffContent(str, getContent(content, "dec"));
             }
-            else
-                vectorMetrics->resDiff = -1;
         }
         else if(strcmp(enable[i].id,"resTotal") == 0) {
             if(enable[i].enable) {
@@ -104,51 +118,34 @@ void setVectorMetrics(FILE *fd, char *str, Content *content, EnableMetrics *enab
                                           countTotalContent(str, getContent(content, "loop")) +
                                           countTotalContent(str, getContent(content, "dec"));
             }
-            else
-                vectorMetrics->resTotal = -1;
         }
         else if(strcmp(enable[i].id,"flowLoop") == 0) {
             if(enable[i].enable)
                 vectorMetrics->flowLoop = countTotalContent(str, getContent(content, "loop"))+countTotalContent(str, getContent(content, "flow"));
-            else
-                vectorMetrics->flowLoop = -1;
         }
         else if(strcmp(enable[i].id,"numberLines") == 0) {
             if(enable[i].enable)
                 vectorMetrics->numberLines = countLinesText(str);
-            else
-                vectorMetrics->numberLines = -1;
         }
         else if(strcmp(enable[i].id,"numberCallFunctions") == 0) {
             if(enable[i].enable)
                 vectorMetrics->numberCallFunctions = getNumberCallFunctions(str,content);
-            else
-                vectorMetrics->numberCallFunctions = -1;
         }
         else if(strcmp(enable[i].id,"numberBlocks") == 0) {
             if(enable[i].enable)
                 vectorMetrics->numberBlocks = getNumberBlocks(str);
-            else
-                vectorMetrics->numberBlocks = -1;
         }
         else if(strcmp(enable[i].id,"vocabHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->vocabHalstead = n1(str,content)+n2(str,content);
-            else
-                vectorMetrics->vocabHalstead = -1;
         }
         else if(strcmp(enable[i].id,"lengthHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->lengthHalstead = N1(str,content)+N2(str,content);
-            else
-                vectorMetrics->lengthHalstead = -1;
         }
         else if(strcmp(enable[i].id,"estimatedLengthHalstead") == 0) {
-            if(enable[i].enable) {
+            if(enable[i].enable)
                 vectorMetrics->estimatedLengthHalstead = n1(str,content)*log2(n1(str,content))+n2(str,content)*log2(n2(str,content));
-            }
-            else
-                vectorMetrics->estimatedLengthHalstead = -1;
         }
         else if(strcmp(enable[i].id,"diffHalstead") == 0) {
             if(enable[i].enable) {
@@ -157,69 +154,42 @@ void setVectorMetrics(FILE *fd, char *str, Content *content, EnableMetrics *enab
                 else
                     vectorMetrics->diffHalstead = 0;
             }
-            else
-                vectorMetrics->diffHalstead = -1;
         }
         else if(strcmp(enable[i].id,"volumeHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->volumeHalstead = volumeHalstead(str,content);
-            else
-                vectorMetrics->volumeHalstead = -1;
         }
         else if(strcmp(enable[i].id,"potencialVolumeHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->potencialVolumeHalstead = potencialVolumeHalstead(str,content);
-            else
-                vectorMetrics->potencialVolumeHalstead = -1;
         }
         else if(strcmp(enable[i].id,"programLevelHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->programLevelHalstead = programLevelHalstead(str,content);
-            else
-                vectorMetrics->programLevelHalstead = -1;
         }
         else if(strcmp(enable[i].id,"estimatedProgramLevelHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->estimatedProgramLevelHalstead = estimatedProgramLevelHalstead(str,content);
-            else
-                vectorMetrics->estimatedProgramLevelHalstead = -1;
-        }
-        else if(strcmp(enable[i].id,"programDifficultyHalstead") == 0) {
-            if(enable[i].enable) {
-                vectorMetrics->programDifficultyHalstead = (programLevelHalstead(str,content) > 0) ? 1/programLevelHalstead(str,content) : 0;
-            }
-            else
-                vectorMetrics->programDifficultyHalstead = -1;
         }
         else if(strcmp(enable[i].id,"intelligenceContentHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->intelligenceContentHalstead = estimatedProgramLevelHalstead(str,content)*volumeHalstead(str,content);
-            else
-                vectorMetrics->intelligenceContentHalstead = -1;
         }
         else if(strcmp(enable[i].id,"programmingEffortHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->programmingEffortHalstead = programmingEffortHalstead(str,content);
-            else
-                vectorMetrics->programmingEffortHalstead = -1;
         }
         else if(strcmp(enable[i].id,"estimatedProgrammingTimeHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->estimatedProgrammingTimeHalstead = programmingEffortHalstead(str,content)/18;
-            else
-                vectorMetrics->estimatedProgrammingTimeHalstead = -1;
         }
         else if(strcmp(enable[i].id,"languageLevelHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->languageLevelHalstead = pow(programLevelHalstead(str,content),2)*volumeHalstead(str,content);
-            else
-                vectorMetrics->languageLevelHalstead = -1;
         }
         else if(strcmp(enable[i].id,"numberBugsHalstead") == 0) {
             if(enable[i].enable)
                 vectorMetrics->numberBugsHalstead = volumeHalstead(str,content)/3200;
-            else
-                vectorMetrics->numberBugsHalstead = -1;
         }
     }
 }
@@ -473,8 +443,6 @@ void showVectorMetrics(VectorMetrics vectorMetrics) {
         printf("\nProgram level Halstead = %.2f", vectorMetrics.programLevelHalstead);
     if(vectorMetrics.estimatedProgramLevelHalstead != -1)
         printf("\nEstimated program level Halstead = %.2f", vectorMetrics.estimatedProgramLevelHalstead);
-    if(vectorMetrics.programDifficultyHalstead != -1)
-        printf("\nProgram difficulty Halstead = %.2f", vectorMetrics.programDifficultyHalstead);
     if(vectorMetrics.intelligenceContentHalstead != -1)
         printf("\nIntelligence content Halstead = %.2f", vectorMetrics.intelligenceContentHalstead);
     if(vectorMetrics.programmingEffortHalstead != -1)
@@ -509,7 +477,7 @@ double similarity(VectorMetrics a, VectorMetrics b, EnableMetrics *enable, int l
 
     for(i = 0; i < lines; i++) {
         if(enable[i].enable)
-            n += enable[i].weight*1;
+            n += enable[i].weight;
     }
 
     if(n > 0) {
@@ -551,8 +519,6 @@ double similarity(VectorMetrics a, VectorMetrics b, EnableMetrics *enable, int l
                     sum += (enable[i].weight) * similarityFloat(a.programLevelHalstead, b.programLevelHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"estimatedProgramLevelHalstead") == 0)
                     sum += (enable[i].weight) * similarityFloat(a.estimatedProgramLevelHalstead, b.estimatedProgramLevelHalstead, enable[i].accuracy);
-                if(strcmp(enable[i].id,"programDifficultyHalstead") == 0)
-                    sum += (enable[i].weight) * similarityFloat(a.programDifficultyHalstead, b.programDifficultyHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"intelligenceContentHalstead") == 0)
                     sum += (enable[i].weight) * similarityFloat(a.intelligenceContentHalstead, b.intelligenceContentHalstead, enable[i].accuracy);
                 if(strcmp(enable[i].id,"programmingEffortHalstead") == 0)
@@ -566,7 +532,7 @@ double similarity(VectorMetrics a, VectorMetrics b, EnableMetrics *enable, int l
             }
         }
 
-        return sum/n;
+        return 100*sum/n;
     }
     else {
         printf("\nSem metricas ativadas\n");

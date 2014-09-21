@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
             showVectorMetrics(vectorMetrics[0]);
             printf("\n\nVectorMetrics[2]:\n");
             showVectorMetrics(vectorMetrics[1]);
-            printf("\n\nSimilarity: %.2f\n", similarity(vectorMetrics[0], vectorMetrics[1], enableMetrics, n));
+            printf("\n\nSimilarity: %.2f%%\n", similarity(vectorMetrics[0], vectorMetrics[1], enableMetrics, n));
             printf("\n******************************************** \n");
         }
         else
